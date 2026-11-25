@@ -2,7 +2,7 @@
 
 **Pre-Commit DevSecOps Safety Net & Structural Diff Cockpit for Autonomous AI Coding Agents**
 
-GuardGit MCP is a 100% open-source (MIT), zero-mutation **SEP-1865 MCP App** and **CLI** (`npx guardgit-mcp`) that protects repositories from the four most common failure modes of autonomous AI coding agents:
+GuardGit MCP is an open-source (**GNU AGPL-3.0**, with Commercial Dual-Licensing available), zero-mutation **SEP-1865 MCP App** and **CLI** (`npx guardgit-mcp`) that protects repositories from the four most common failure modes of autonomous AI coding agents:
 
 1. **Secret & Artifact Leakage (`scan_precommit_guard`)**: Catches `.env` files, AWS/OpenAI/Anthropic/GitHub/Stripe/Cloudflare/Google/Slack/npm tokens, JWTs, PEM private keys, database credentials, high-entropy assignments, large/binary blobs (`>1 MB` configurable), SQLite files, and build artifacts (`node_modules/`, `dist/`, `.next/`, `*.vsix`, `*.db`) — returning a `0-100` risk score, `PASS / WARN / BLOCK` verdict, redacted previews, `.gitignore` blocks, and copyable `git rm --cached` remediation commands.
 2. **Unreadable Minified/Large JSON Diffs (`diff_structural_json`)**: Replaces 10,000-character single-line diffs in `package.json`, `tsconfig.json`, lockfiles, i18n locale dictionaries (`en.json`, `tr.json`), and Terraform/Kubernetes JSON with semantic key-level trees, keyed array matching, bulk-shift noise suppression, and automatic breaking-change flags.
@@ -124,6 +124,7 @@ npm test
 - **100% local & read-only**: GuardGit never pushes, checks out, resets, or mutates your working tree, and makes zero network requests.
 - **Automatic redaction**: Detected secret tokens are masked (`sk-a***...***9f2a`) before returning tool results so raw credentials are never echoed into LLM conversation logs.
 
-## License
+## License (Dual-Licensed: GNU AGPL-3.0 + Commercial)
 
-MIT License — Copyright (c) 2026 Hessam Mamagani. See [LICENSE](./LICENSE).
+- **Open-Source License (Free)**: Copyright (c) 2026 Hessam Mamagani. Licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)** — see [LICENSE](./LICENSE). Free for personal, open-source, and local developer CLI/MCP usage. Any modified or network-hosted derivative must remain open-source under AGPL-3.0 with original copyright attribution.
+- **Commercial / Enterprise License**: Organizations or developers wishing to embed GuardGit MCP inside proprietary/closed-source software, distribute modified closed-source derivatives, or license enterprise Pro integrations can obtain a commercial license — see [COMMERCIAL_LICENSE.md](./COMMERCIAL_LICENSE.md).

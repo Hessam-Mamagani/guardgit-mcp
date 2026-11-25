@@ -1,6 +1,6 @@
 # GuardGit MCP v1.0 — Public Launch Playbook
 
-Zero-conflict, 100% personal MIT open-source launch assets ready for immediate distribution across Hacker News, Reddit (`r/mcp`, `r/ClaudeAI`, `r/programming`), and LinkedIn.
+Zero-conflict, 100% personal AGPL-3.0 open-source launch assets ready for immediate distribution across Hacker News, Reddit (`r/mcp`, `r/ClaudeAI`, `r/programming`), and LinkedIn.
 
 ---
 
@@ -18,7 +18,7 @@ While working heavily with autonomous AI coding agents (Claude Code, Cursor, Ant
 3. Pushing branches without realizing upstream `main` diverged on the same files.
 4. Dumping 35 unrelated file changes into a single "update code" commit.
 
-I extracted and rebuilt my diff and hygiene engines into **GuardGit MCP** — a clean TypeScript, MIT-licensed **SEP-1865 MCP App** + CLI (`npx guardgit-mcp`) that runs 100% locally and read-only:
+I extracted and rebuilt my diff and hygiene engines into **GuardGit MCP** — a clean TypeScript, AGPL-3.0 open-source **SEP-1865 MCP App** + CLI (`npx guardgit-mcp`) that runs 100% locally and read-only:
 
 - **Pre-Commit Secret & Artifact Guard (`scan_precommit_guard`)**: Detects AWS/OpenAI/Anthropic/GitHub/Stripe/Cloudflare/JWT/PEM keys, Shannon high-entropy assignments, large/binary blobs, and generated folders (`dist/`, `node_modules/`, `*.vsix`, `*.db`). Masks secrets before returning results to the LLM and outputs exact `git rm --cached` + `.gitignore` fixes.
 - **Structural JSON Diff (`diff_structural_json`)**: Zero-dependency semantic key-level and keyed-array diffing with breaking-change heuristics (removed i18n keys, `tsconfig` strictness weakening, major dependency bumps, type flips).
@@ -37,7 +37,7 @@ Would love feedback on additional secret rules, breaking-change config heuristic
 
 ### r/mcp
 **Title:**
-I built GuardGit MCP — an MIT-licensed SEP-1865 MCP App that gives AI coding agents a pre-commit DevSecOps cockpit (secret guard, structural JSON diff, read-only `git merge-tree` advisor & atomic commit splitter)
+I built GuardGit MCP — an AGPL-3.0 open-source SEP-1865 MCP App that gives AI coding agents a pre-commit DevSecOps cockpit (secret guard, structural JSON diff, read-only `git merge-tree` advisor & atomic commit splitter)
 
 **Body:**
 Built this because autonomous coding agents are fast at writing code and equally fast at staging `.env` files, bloating diffs with minified JSON, or making 30-file mega-commits.
@@ -49,7 +49,7 @@ Built this because autonomous coding agents are fast at writing code and equally
 - Standalone CLI (`npx guardgit-mcp scan . --strict`) for CI and local pre-commit hooks.
 - 100% read-only Git execution (uses `git merge-tree --write-tree` in memory so it never mutates your working tree) and automatic secret masking so credentials never leak into model context.
 
-GitHub (MIT): https://github.com/Hessam-Mamagani/guardgit-mcp
+GitHub (AGPL-3.0): https://github.com/Hessam-Mamagani/guardgit-mcp
 
 ### r/ClaudeAI
 **Title:**
@@ -58,7 +58,7 @@ Open-sourced a local MCP safety net for Claude Code / Desktop: catches leaked se
 **Body:**
 If you let Claude Code work across large repos, you have probably caught it trying to stage a build folder, losing context on a giant JSON file, or bundling 25 edits into one commit.
 
-I open-sourced **GuardGit MCP** (MIT) to run right inside your MCP config (`npx -y guardgit-mcp`):
+I open-sourced **GuardGit MCP** (AGPL-3.0) to run right inside your MCP config (`npx -y guardgit-mcp`):
 - Scans staged/unstaged diffs & untracked files for cloud/LLM tokens (OpenAI, Anthropic, AWS, GitHub, Stripe, Cloudflare, JWTs, PEM keys, high-entropy strings) and masks matches before handing results back to Claude.
 - Turns minified/large JSON diffs into key-path trees with breaking-change flags.
 - Runs strictly read-only `git merge-tree --write-tree` conflict checks against `main` before you push.
@@ -69,16 +69,16 @@ Repo: https://github.com/Hessam-Mamagani/guardgit-mcp
 
 ### r/programming
 **Title:**
-Using `git merge-tree --write-tree`, Shannon entropy, and semantic JSON tree diffing as a zero-mutation safety gate for AI coding agents (MIT TypeScript)
+Using `git merge-tree --write-tree`, Shannon entropy, and semantic JSON tree diffing as a zero-mutation safety gate for AI coding agents (AGPL-3.0 TypeScript)
 
 **Body:**
-Short technical write-up + MIT repo (**GuardGit MCP**) covering four deterministic guardrails that belong outside the LLM prompt:
+Short technical write-up + AGPL-3.0 repo (**GuardGit MCP**) covering four deterministic guardrails that belong outside the LLM prompt:
 1. **In-memory merge dry-runs**: `git merge-tree --write-tree --name-only <target> HEAD` detects exact conflicted files without touching the index or working tree, combined with `merge-base` overlap checks for uncommitted local edits.
 2. **Keyed structural JSON diffing**: Sampling array objects to infer primary keys (`id`, `key`, `name`, `slug`) or graph edges (`source`/`target`), separating bulk-shifted fields from substantive mutations, and flagging schema/config breaking changes (`package.json` major bumps, `tsconfig` strictness drops, removed i18n keys).
 3. **Deterministic secret & artifact guard**: Pattern rules + Shannon entropy (`>= 4.2` bits/char across 3+ character classes) with automatic masking so raw tokens are never returned to the agent context.
 4. **Atomic Conventional Commit planning**: Deterministic domain grouping that automatically withholds blocked secrets/artifacts.
 
-Repo (MIT, TypeScript, zero external runtime services): https://github.com/Hessam-Mamagani/guardgit-mcp
+Repo (AGPL-3.0, TypeScript, zero external runtime services): https://github.com/Hessam-Mamagani/guardgit-mcp
 
 ---
 
@@ -91,7 +91,7 @@ Autonomous AI coding agents changed how fast we write code — but they also mul
 - Merge conflicts discovered only after pushing
 - 30+ file mega-commits that make code review and `git bisect` painful
 
-Today I am open-sourcing **GuardGit MCP v1.0** (MIT License) — a local, strictly read-only **SEP-1865 MCP App** and CLI (`npx guardgit-mcp`) built in TypeScript.
+Today I am open-sourcing **GuardGit MCP v1.0** (AGPL-3.0 Open-Source + Commercial Dual-License) — a local, strictly read-only **SEP-1865 MCP App** and CLI (`npx guardgit-mcp`) built in TypeScript.
 
 What it brings directly into Antigravity, Claude, Cursor, and CI pipelines:
 1. Pre-Commit Secret, High-Entropy & Artifact Guard (with automatic token redaction and copyable `git rm --cached` / `.gitignore` remediation)

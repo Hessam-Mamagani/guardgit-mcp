@@ -2,7 +2,7 @@
   "name": "guardgit-mcp",
   "version": "1.0.0",
   "description": "Pre-commit DevSecOps safety net, structural JSON diff engine, read-only git merge-tree blast-radius advisor, and atomic commit splitter delivered as a SEP-1865 MCP App and CLI.",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "author": {
     "name": "Hessam Mamagani",
     "email": "hessam.mamagani@gmail.com",
@@ -48,6 +48,7 @@
     "dist",
     "plugin",
     "LICENSE",
+    "COMMERCIAL_LICENSE.md",
     "README.md"
   ],
   "engines": {
