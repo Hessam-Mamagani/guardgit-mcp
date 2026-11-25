@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GuardGit Cockpit</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app" class="cockpit-shell">
+      <header class="topbar">
+        <div class="brand-group">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+              <path
+                d="M12 2.5L20 5.4V11.6C20 16.7 16.6 20.3 12 22C7.4 20.3 4 16.7 4 11.6V5.4L12 2.5Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+              <circle cx="9.5" cy="9.5" r="1.4" fill="currentColor" />
+              <circle cx="14.5" cy="9.5" r="1.4" fill="currentColor" />
+              <circle cx="9.5" cy="15.2" r="1.4" fill="currentColor" />
+              <path
+                d="M9.5 10.9V13.8M14.5 10.9C14.5 13 12 13.1 10.6 14.3"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title-row">
+              <h1>GuardGit Cockpit</h1>
+              <span id="branch-pill" class="chip chip-muted">branch: --</span>
+              <span id="verdict-pill" class="chip chip-pass">PASS</span>
+            </div>
+            <p id="repo-subtitle" class="subtitle">Pre-commit DevSecOps safety net &amp; structural diff cockpit</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="repo-input-wrap">
+            <input
+              id="repo-path-input"
+              type="text"
+              class="input"
+              placeholder="Repository path (defaults to workspace)"
+              aria-label="Repository path"
+            />
+            <button id="rescan-btn" class="btn btn-primary" type="button">
+              <svg viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true">
+                <path d="M13.5 8A5.5 5.5 0 1 1 11.9 4.1M13.5 2.5V5.2H10.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Re-Scan</span>
+            </button>
+          </div>
+          <button id="attach-ctx-btn" class="btn btn-ghost hidden" type="button" title="Attach current findings to your next chat message">
+            Attach to Chat
+          </button>
+          <button id="ask-fix-btn" class="btn btn-ghost hidden" type="button" title="Ask the assistant to remediate findings">
+            Remediate in Chat
+          </button>
+        </div>
+      </header>
+
+      <nav class="tabs" role="tablist" aria-label="GuardGit Views">
+        <button class="tab active" role="tab" data-tab="guard" aria-selected="true" type="button">
+          <span>Pre-Commit Guard</span>
+          <span id="tab-badge-guard" class="tab-badge">0</span>
+        </button>
+        <button class="tab" role="tab" data-tab="json-diff" aria-selected="false" type="button">
+          <span>Structural JSON Diff</span>
+          <span id="tab-badge-json" class="tab-badge">0</span>
+        </button>
+        <button class="tab" role="tab" data-tab="blast-radius" aria-selected="false" type="button">
+          <span>Blast Radius &amp; Merge Tree</span>
+          <span id="tab-badge-blast" class="tab-badge">0</span>
+        </button>
+        <button class="tab" role="tab" data-tab="atomic-commits" aria-selected="false" type="button">
+          <span>Atomic Commit Splitter</span>
+          <span id="tab-badge-commits" class="tab-badge">0</span>
+        </button>
+      </nav>
+
+      <div id="loading-banner" class="loading-banner hidden" role="status" aria-live="polite">
+        <span class="spinner" aria-hidden="true"></span>
+        <span id="loading-text">Analyzing repository...</span>
+      </div>
+
+      <main class="content">
+        <!-- TAB 1: PRE-COMMIT GUARD & OVERVIEW -->
+        <section id="panel-guard" class="panel active" role="tabpanel">
+          <div class="hero-grid">
+            <div class="card gauge-card">
+              <div class="gauge-wrap">
+                <svg class="gauge-svg" viewBox="0 0 140 84" aria-label="Risk score gauge">
+                  <path
+                    d="M 16 74 A 54 54 0 0 1 124 74"
+                    fill="none"
+                    stroke="var(--gg-track)"
+                    stroke-width="10"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    id="gauge-arc"
+                    d="M 16 74 A 54 54 0 0 1 124 74"
+                    fill="none"
+                    stroke="var(--gg-accent-ok)"
+                    stroke-width="10"
+                    stroke-linecap="round"
+                    stroke-dasharray="170"
+                    stroke-dashoffset="170"
+                  />
+                </svg>
+                <div class="gauge-value">
+                  <span id="gauge-score" class="num">0</span>
+                  <span class="gauge-caption">RISK / 100</span>
+                </div>
+              </div>
+              <div class="gauge-meta">
+                <div id="gauge-verdict-label" class="verdict-title">PASS</div>
+                <div id="gauge-subtext" class="muted">Zero blocking issues detected</div>
+              </div>
+            </div>
+
+            <div class="kpi-grid">
+              <div class="card kpi-card">
+                <div class="kpi-label">Findings Breakdown</div>
+                <div id="kpi-findings" class="kpi-value num">0</div>
+                <div id="kpi-findings-sub" class="kpi-sub">0 critical · 0 high · 0 medium</div>
+              </div>
+              <div class="card kpi-card">
+                <div class="kpi-label">Blast Radius</div>
+                <div id="kpi-blast" class="kpi-value num">--</div>
+                <div id="kpi-blast-sub" class="kpi-sub">Run overview to score</div>
+              </div>
+              <div class="card kpi-card">
+                <div class="kpi-label">Merge-Tree Dry Run</div>
+                <div id="kpi-merge" class="kpi-value">--</div>
+                <div id="kpi-merge-sub" class="kpi-sub">Read-only conflict check</div>
+              </div>
+              <div class="card kpi-card">
+                <div class="kpi-label">Atomic Commits</div>
+                <div id="kpi-commits" class="kpi-value num">--</div>
+                <div id="kpi-commits-sub" class="kpi-sub">Logical domain groups</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card section-card">
+            <div class="section-header">
+              <div>
+                <h2>Security &amp; Hygiene Findings</h2>
+                <p id="findings-subtitle" class="muted">Read-only scan across staged diffs, working tree, and untracked files</p>
+              </div>
+              <div class="filter-bar" id="severity-filters">
+                <button class="pill active" data-severity="all" type="button">All</button>
+                <button class="pill" data-severity="critical" type="button">Critical</button>
+                <button class="pill" data-severity="high" type="button">High</button>
+                <button class="pill" data-severity="medium" type="button">Medium</button>
+              </div>
+            </div>
+
+            <div id="findings-empty" class="empty-state">
+              <div class="empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+                  <path d="M5 12.5L9.5 17L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="empty-title">Repository Guard Clean</div>
+              <p class="muted">No exposed secrets, credential files, oversized blobs, or build artifacts detected.</p>
+            </div>
+
+            <div id="findings-table-wrap" class="table-wrap hidden">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Severity</th>
+                    <th>Finding</th>
+                    <th>Location</th>
+                    <th>Remediation</th>
+                  </tr>
+                </thead>
+                <tbody id="findings-tbody"></tbody>
+              </table>
+            </div>
+
+            <div id="gitignore-box" class="code-box hidden">
+              <div class="code-box-header">
+                <span>Suggested .gitignore Additions</span>
+                <button id="copy-gitignore-btn" class="btn btn-sm" type="button">Copy Rules</button>
+              </div>
+              <pre id="gitignore-pre"></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: STRUCTURAL JSON DIFF -->
+        <section id="panel-json-diff" class="panel" role="tabpanel">
+          <div class="card section-card">
+            <div class="section-header">
+              <div>
+                <h2 id="json-diff-title">Structural JSON Diff</h2>
+                <p id="json-diff-meta" class="muted">Semantic key-level and keyed-array comparison</p>
+              </div>
+              <div class="header-controls">
+                <select id="json-file-select" class="select hidden" aria-label="Select modified JSON file"></select>
+                <button id="toggle-json-compare-btn" class="btn btn-sm" type="button">Compare Custom JSON</button>
+              </div>
+            </div>
+
+            <div id="custom-json-drawer" class="drawer hidden">
+              <div class="drawer-grid">
+                <label class="field">
+                  <span>Baseline JSON (Old)</span>
+                  <textarea id="old-json-input" class="textarea" rows="6" placeholder='{"version": "1.0.0"}'></textarea>
+                </label>
+                <label class="field">
+                  <span>Updated JSON (New)</span>
+                  <textarea id="new-json-input" class="textarea" rows="6" placeholder='{"version": "2.0.0"}'></textarea>
+                </label>
+              </div>
+              <div class="drawer-footer">
+                <input id="custom-json-filename" class="input input-sm" type="text" value="package.json" placeholder="Filename context (e.g. package.json, tsconfig.json, tr.json)" />
+                <button id="run-json-diff-btn" class="btn btn-primary btn-sm" type="button">Run Structural Diff</button>
+              </div>
+            </div>
+
+            <div class="stat-strip" id="json-stat-strip">
+              <span class="stat-chip stat-add">+0 Added</span>
+              <span class="stat-chip stat-rem">-0 Removed</span>
+              <span class="stat-chip stat-mod">~0 Modified</span>
+              <span class="stat-chip stat-brk">0 Breaking</span>
+            </div>
+
+            <div class="toolbar-row">
+              <input id="json-search-input" class="input input-sm" type="text" placeholder="Filter by JSON path or value..." />
+              <label class="toggle-label">
+                <input id="json-breaking-only" type="checkbox" />
+                <span>Breaking changes only</span>
+              </label>
+            </div>
+
+            <div id="json-breaking-banner" class="alert-banner hidden"></div>
+            <div id="json-tree-container" class="json-tree"></div>
+          </div>
+        </section>
+
+        <!-- TAB 3: BLAST RADIUS & MERGE TREE -->
+        <section id="panel-blast-radius" class="panel" role="tabpanel">
+          <div class="two-col">
+            <div class="card section-card">
+              <div class="section-header">
+                <div>
+                  <h2>Read-Only git merge-tree Dry Run</h2>
+                  <p class="muted">Zero index or working-tree mutations</p>
+                </div>
+                <div class="inline-form">
+                  <input id="target-branch-input" class="input input-sm" type="text" placeholder="Target branch (auto)" />
+                  <button id="run-blast-btn" class="btn btn-sm" type="button">Check</button>
+                </div>
+              </div>
+              <div id="merge-status-card" class="merge-card"></div>
+              <div id="blast-recommendations" class="rec-list"></div>
+            </div>
+
+            <div class="card section-card">
+              <div class="section-header">
+                <div>
+                  <h2>Sensitive Surface Hits</h2>
+                  <p class="muted">High-impact domains touched in current diff</p>
+                </div>
+              </div>
+              <div id="sensitive-grid" class="sensitive-grid"></div>
+            </div>
+          </div>
+
+          <div class="card section-card">
+            <div class="section-header">
+              <div>
+                <h2>Directory Blast-Radius Heatmap</h2>
+                <p id="heatmap-subtitle" class="muted">Weighted by file churn, spread, and sensitive path exposure</p>
+              </div>
+            </div>
+            <div id="heatmap-list" class="heatmap-list"></div>
+          </div>
+        </section>
+
+        <!-- TAB 4: ATOMIC COMMIT SPLITTER -->
+        <section id="panel-atomic-commits" class="panel" role="tabpanel">
+          <div class="card section-card">
+            <div class="section-header">
+              <div>
+                <h2>Atomic Commit Plan</h2>
+                <p id="atomic-subtitle" class="muted">Logical Conventional Commit grouping with automatic risky-file withholding</p>
+              </div>
+              <button id="refresh-plan-btn" class="btn btn-sm" type="button">Recompute Split</button>
+            </div>
+
+            <div id="withheld-banner" class="alert-banner hidden"></div>
+            <div id="commit-groups-list" class="commit-grid"></div>
+          </div>
+        </section>
+      </main>
+
+      <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

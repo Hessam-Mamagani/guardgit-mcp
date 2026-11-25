@@ -1,0 +1,77 @@
+{
+  "name": "guardgit-mcp",
+  "version": "1.0.0",
+  "description": "Pre-commit DevSecOps safety net, structural JSON diff engine, read-only git merge-tree blast-radius advisor, and atomic commit splitter delivered as a SEP-1865 MCP App and CLI.",
+  "license": "MIT",
+  "author": {
+    "name": "Hessam Mamagani",
+    "email": "hessam.mamagani@gmail.com",
+    "url": "https://hessam-mamagani.github.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hessam-Mamagani/guardgit-mcp.git"
+  },
+  "homepage": "https://github.com/Hessam-Mamagani/guardgit-mcp#readme",
+  "keywords": [
+    "mcp",
+    "mcp-app",
+    "sep-1865",
+    "devsecops",
+    "git",
+    "pre-commit",
+    "secret-scanner",
+    "json-diff",
+    "merge-tree",
+    "ai-agents",
+    "claude",
+    "cursor",
+    "antigravity"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "guardgit-mcp": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "plugin",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "npm run build:server && npm run build:ui && npm run build:plugin",
+    "build:server": "tsc -p tsconfig.json",
+    "build:ui": "vite build",
+    "build:plugin": "node scripts/bundle-plugin.mjs",
+    "build:test": "tsc -p tsconfig.test.json",
+    "test": "npm run build && npm run build:test && node --test dist-test/tests/*.test.js",
+    "start": "node dist/cli.js",
+    "dev:ui": "vite"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vite-plugin-singlefile": "^2.2.0"
+  }
+}

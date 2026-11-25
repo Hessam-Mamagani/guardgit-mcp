@@ -1,0 +1,21 @@
+{
+  "name": "guardgit-mcp",
+  "displayName": "GuardGit MCP",
+  "version": "1.0.0",
+  "description": "Pre-commit DevSecOps secret and artifact guard, structural JSON diff engine, read-only git merge-tree blast-radius advisor, and atomic commit splitter with an interactive SEP-1865 cockpit.",
+  "author": {
+    "name": "Hessam Mamagani",
+    "url": "https://hessam-mamagani.github.io"
+  },
+  "homepage": "https://github.com/Hessam-Mamagani/guardgit-mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hessam-Mamagani/guardgit-mcp.git"
+  },
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Open the GuardGit Cockpit and scan my current repository for leaked secrets, large blobs, and blast radius",
+    "Run a structural JSON diff on package.json against HEAD and highlight any breaking changes",
+    "Split my current working-tree changes into clean atomic Conventional Commits and check merge conflicts against main"
+  ]
+}

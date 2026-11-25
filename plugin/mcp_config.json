@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "guardgit": {
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/bin/guardgit-mcp.cjs", "--stdio"]
+    }
+  }
+}
