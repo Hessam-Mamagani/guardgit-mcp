@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Hessam-Mamagani/guardgit-mcp",
+  "title": "GuardGit MCP",
+  "description": "Pre-commit secret guard, structural JSON diff, merge-tree conflict & atomic commit SEP-1865 MCP App",
+  "version": "1.0.0",
+  "websiteUrl": "https://hessam-mamagani.github.io",
+  "repository": {
+    "url": "https://github.com/Hessam-Mamagani/guardgit-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "guardgit-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
